@@ -1,0 +1,58 @@
+//
+//  WOEATAPP_KITCHEN_Prefix.pch
+//  WOEATAPP-KITCHEN
+//
+//  Created by Huang Yirong on 16/10/15.
+//  Copyright © 2016年 com.woeat-inc. All rights reserved.
+//
+
+#ifndef WOEATAPP_KITCHEN_Prefix_pch
+#define WOEATAPP_KITCHEN_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#import "UIColor+UPDAddition.h"
+#import "YRDefine.h"
+#import "UIStoryboard+WOEAT.h"
+#import "WKNetworkManager.h"
+#import "WKKeyChain.h"
+#import "WKUserInfo.h"
+#import "YRToastView.h"
+#import "WKBaseViewController.h"
+#import "ELEBaseInfoTool.h"
+#import "WKBusinessTimeManager.h"
+#import "UIImageView+WebCache.h"
+
+
+
+//define this constant if you want to use Masonry without the 'mas_' prefix
+#define MAS_SHORTHAND
+
+//define this constant if you want to enable auto-boxing for default syntax
+#define MAS_SHORTHAND_GLOBALS
+
+#import "Masonry.h"
+#import "NSString+Addition.h"
+
+#define  UICOLOR(r,g,b) [UIColor colorWithRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1.0]
+#define CONVERT_TO_TYPE(v, type) ((type)(v))
+
+#define CHECK_NULL_STRING(s) ((s) ? (s) : @"")
+
+#define ENCODING_UTF8_PERCENT(s) ([s stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] ? [s stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]] : @"")
+
+#define MAKE_STRING_NOT_EMPTY(s) if (!s.length) s=@" ";
+
+
+#define DARK_COLOR     UICOLOR(61,57,56)
+#define SILVER_COLOR   UICOLOR(139,133,103)
+
+
+#define USER_DEFAULT_PHONE  @"USER_DEFAULT_PHONE"
+#define USER_DEFAULT_TOKEN  @"USER_DEFAULT_TOKEN"
+
+#define TEST_Latitude   @"34.00"
+#define TEST_Longitude  @"-118.00"
+
+
+#endif /* WOEATAPP_KITCHEN_Prefix_pch */

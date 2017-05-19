@@ -1,0 +1,285 @@
+//
+//  WKHomeViewController.m
+//  WOEATAPP-KITCHEN
+//
+//  Created by tamony on 2016/10/19.
+//  Copyright © 2016年 com.woeat-inc. All rights reserved.
+//
+
+#import "WKHomeViewController.h"
+#import "WKHeaderViewCell.h"
+#import "WKMenuViewCell.h"
+#import "WKOrderManagerViewController.h"
+<<<<<<< HEAD
+#import "WKKitchenViewController.h"
+=======
+#import "WKIncomeViewController.h"
+>>>>>>> 0b2441a582254e4d23dbc93b7f1fa968bea88f44
+
+@interface WKHomeViewController ()<UITableViewDataSource,UITableViewDelegate,WKHeaderViewCellDelegate>
+
+@property (nonatomic, strong) UITableView *homeTableView;
+@property (nonatomic, strong) UISwitch *btnShopSwitch;
+@property (nonatomic, strong) UILabel *labTodayTurnover;
+@property (nonatomic, strong) UILabel *labTotalMoney;
+@property (nonatomic, assign) CGFloat todayTurnOver;
+@property (nonatomic, assign) CGFloat totalMoney;
+
+@end
+
+@implementation WKHomeViewController
+
+- (void)loadView
+{
+    [super loadView];
+    self.view.backgroundColor = [UIColor lightGrayColor];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    [self.view addSubview:self.homeTableView];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+}
+
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
+}
+
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:animated];
+    self.navigationController.navigationBarHidden = NO;
+}
+
+#pragma mark- init
+- (UITableView *)homeTableView
+{
+    if (_homeTableView == nil) {
+        CGFloat originY = 20;
+        _homeTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, originY, screen_width, screen_height - originY) style:UITableViewStylePlain];
+        _homeTableView.dataSource = self;
+        _homeTableView.delegate = self;
+        _homeTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        _homeTableView.separatorColor = [UIColor lightGrayColor];
+        _homeTableView.tableFooterView = [[UIView alloc] init];
+        if ([_homeTableView respondsToSelector:@selector(setLayoutMargins:)]) {
+            [_homeTableView setLayoutMargins:UIEdgeInsetsZero];
+        }
+        _homeTableView.backgroundColor = [UIColor grayColor];
+    }
+    return _homeTableView;
+}
+
+- (UISwitch *)btnShopSwitch
+{
+    if (_btnShopSwitch == nil) {
+        _btnShopSwitch = [[UISwitch alloc] initWithFrame:CGRectMake((screen_width - 60) / 2, 10, 60, 26)];
+        _btnShopSwitch.backgroundColor = [UIColor clearColor];
+        [_btnShopSwitch addTarget:self action:@selector(turnOnOffShop:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _btnShopSwitch;
+}
+
+- (UILabel *)labTodayTurnover
+{
+    if (_labTodayTurnover == nil) {
+        _labTodayTurnover = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, screen_width / 2.0, 60)];
+        _labTodayTurnover.textAlignment = NSTextAlignmentCenter;
+        _labTodayTurnover.textColor = [UIColor redColor];
+        _labTodayTurnover.font = [UIFont systemFontOfSize:15];
+        _labTodayTurnover.numberOfLines = 0;
+    }
+    return _labTodayTurnover;
+}
+
+- (UILabel *)labTotalMoney
+{
+    if (_labTotalMoney == nil) {
+        _labTotalMoney = [[UILabel alloc] initWithFrame:CGRectMake(screen_width / 2.0, 10, screen_width / 2.0, 60)];
+        _labTotalMoney.textAlignment = NSTextAlignmentCenter;
+        _labTotalMoney.textColor = [UIColor redColor];
+        _labTotalMoney.font = [UIFont systemFontOfSize:15];
+        _labTotalMoney.numberOfLines = 0;
+    }
+    return _labTotalMoney;
+}
+#pragma mark- tableview methods
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 6;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell;
+    if (indexPath.row == 0) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ShopSwitchCell"];
+        [cell.contentView addSubview:self.btnShopSwitch];
+        cell.contentView.backgroundColor = [UIColor lightGrayColor];
+    }else if (indexPath.row == 1){
+        WKHeaderViewCell *headerCell = [tableView dequeueReusableCellWithIdentifier:@"HeaderCell"];
+        if (headerCell == nil) {
+            headerCell = [[WKHeaderViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HeaderCell"];
+        }
+        headerCell.delegate = self;
+        cell = headerCell;
+    }else if (indexPath.row == 2){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"TodayCell"];
+        NSString *str = @"$275.30";
+        NSString *string = [NSString stringWithFormat:@"今日营业额\n%@",str];
+        NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributeString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[string rangeOfString:@"今日营业额"]];
+        [attributeString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16] range:[string rangeOfString:@"今日营业额"]];
+        self.labTotalMoney.attributedText = attributeString;
+
+        string = [NSString stringWithFormat:@"钱箱总额\n%@",str];
+        attributeString = [[NSMutableAttributedString alloc] initWithString:string];
+        [attributeString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[string rangeOfString:@"钱箱总额"]];
+        [attributeString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:16] range:[string rangeOfString:@"钱箱总额"]];
+        self.labTodayTurnover.attributedText = attributeString;
+        
+        [cell.contentView addSubview:self.labTotalMoney];
+        [cell.contentView addSubview:self.labTodayTurnover];
+        cell.contentView.backgroundColor = [UIColor clearColor];
+    }else{
+        WKMenuViewCell *menuCell = [tableView dequeueReusableCellWithIdentifier:@"MenuCell"];
+        if (menuCell == nil) {
+            menuCell = [[WKMenuViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"MenuCell"];
+        }
+        NSString *leftMenuName = @"";
+        NSString *rightMenuName = @"";
+        NSString *leftMenuIconName = @"";
+        NSString *rightMenuIconName = @"";
+        NSInteger leftViewTag;
+        NSInteger rightViewTag;
+        if (indexPath.row == 3) {
+            leftMenuName = @"订单管理";
+            rightMenuName = @"我的收入";
+            leftMenuIconName = @"icon_order";
+            rightMenuIconName = @"icon_income";
+            leftViewTag = 1000 + 1;
+            rightViewTag = 1000 + 2;
+        }else if(indexPath.row == 4){
+            leftMenuName = @"厨房设置";
+            rightMenuName = @"菜品设置";
+            leftMenuIconName = @"icon_kitchen";
+            rightMenuIconName = @"icon_dish";
+            leftViewTag = 1000 + 3;
+            rightViewTag = 1000 + 4;
+        }else{
+            leftMenuName = @"饭友评价";
+            rightMenuName = @"帮助中心";
+            leftMenuIconName = @"icon_comment";
+            rightMenuIconName = @"icon_menu";
+            leftViewTag = 1000 + 5;
+            rightViewTag = 1000 + 6;
+        }
+        menuCell.labLeftMenu.text = leftMenuName;
+        menuCell.labRightMenu.text = rightMenuName;
+        menuCell.imgLeftMenu.image = [UIImage imageNamed:leftMenuIconName];
+        menuCell.imgRightMenu.image = [UIImage imageNamed:rightMenuIconName];
+        menuCell.imgLeftMenu.tag = leftViewTag;
+        menuCell.imgRightMenu.tag = rightViewTag;
+        menuCell.imgLeftMenu.userInteractionEnabled = YES;
+        menuCell.imgRightMenu.userInteractionEnabled = YES;
+        [menuCell.imgLeftMenu addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(enterFunction:)]];
+        [menuCell.imgRightMenu addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(enterFunction:)]];
+
+        cell = menuCell;
+    }
+    if([cell respondsToSelector:@selector(setSeparatorInset:)]){
+        cell.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)] ) {
+        cell.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0);
+    }
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat height = 0;
+    switch (indexPath.row) {
+        case 0:
+            height = 46;
+            break;
+        case 1:
+            height = (screen_width - 30 * 4) / 3 + 50;
+            break;
+        case 2:
+            height = 80;
+            break;
+        default:
+            height = (screen_height - 46 - ((screen_width - 30 * 4) / 3 + 50) - 80) / 3.0;
+            break;
+    }
+    return height;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+}
+
+
+#pragma mark - switch 开店/关店
+- (void)turnOnOffShop:(id)sender
+{
+}
+
+#pragma mark - header menu delegate
+- (void)didQueryCookMenu
+{
+    //要做的菜
+}
+
+- (void)didQueryTodayOrder
+{
+    //今日订单
+}
+
+- (void)didQueryTomorrowOrder
+{
+    //明日订单
+}
+
+- (void)enterFunction:(UITapGestureRecognizer *)recognizer
+{
+    NSInteger viewTag = recognizer.view.tag;
+    switch (viewTag - 1000) {
+        case 1:{
+            //订单管理
+            WKOrderManagerViewController *orderManager = [[WKOrderManagerViewController alloc]init];
+            [self.navigationController pushViewController:orderManager animated:YES];
+        }
+            break;
+        case 2:{
+            //我的收入
+            WKIncomeViewController *incomeVc = [[WKIncomeViewController alloc]init];
+            [self.navigationController pushViewController:incomeVc animated:YES];
+        }
+            break;
+        case 3:{
+            //厨房设置
+            WKKitchenViewController *ktchenController = [[WKKitchenViewController alloc]init];
+            [self.navigationController pushViewController:ktchenController animated:YES];
+        }
+            break;
+        case 4:{
+            //菜品设置
+        }
+            break;
+        case 5:{
+            //饭友评价
+        }
+            break;
+        case 6:{
+            //帮助中心
+        }
+            break;
+        default:
+            break;
+    }
+}
+@end
