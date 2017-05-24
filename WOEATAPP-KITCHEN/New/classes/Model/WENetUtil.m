@@ -21,8 +21,8 @@
 #if TEST_LOCAL_NET
     #define BASE_URL     @"http://localhost:8080/woeatServer"
 #else
-    #define BASE_URL     @"https://api.woeatapp.com/v1"
-
+    #define BASE_URL     @"http://120.27.215.92:8080/v1"
+//    #define BASE_URL     @"https://api.woeatapp.com/v1"
 #endif
 
 #define SAVE_JSON_FILE 1
@@ -30,6 +30,8 @@
 
 #define URL_SendSecurityCode                    BASE_URL@"/User/SendSecurityCodeConsumer"
 #define URL_Login                               BASE_URL@"/User/Login"
+//#define URL_Login                               BASE_URL@"/User/LoginByPwd"
+
 //获取当前用户的余额
 #define URL_GetMyBalance                         BASE_URL@"/User/GetMyBalance"
 //更新用户头像
@@ -191,8 +193,7 @@ static void tmpBreak()
     // 声明获取到的数据格式
     //manager.responseSerializer = [AFHTTPResponseSerializer serializer]; // AFN不会解析,数据是data，需要自己解析
     manager.responseSerializer = [AFJSONResponseSerializer serializer]; // AFN会JSON解析返回的数据
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/html", nil];
-    // 个人建议还是自己解析的比较好，有时接口返回的数据不合格会报3840错误，大致是AFN无法解析返回来的数据
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/x-www-form-urlencoded",@"application/json", @"text/plain", nil];    // 个人建议还是自己解析的比较好，有时接口返回的数据不合格会报3840错误，大致是AFN无法解析返回来的数据
     return manager;
 }
 
@@ -308,6 +309,10 @@ static void tmpBreak()
     NSDictionary *param = @{ @"MobileNumber" : phoneNumber,
                              @"SecurityCode" : securityCode,
                              };
+//    NSDictionary *param = @{ @"MobileNumber" : @"4569733564",
+//                                 @"Pwd" : @"123456",
+//                                 };
+
     NSLog(@"%@",manager.requestSerializer.HTTPRequestHeaders);
     
     [manager POST:URL_Login parameters:param progress:^(NSProgress * _Nonnull downloadProgress) {

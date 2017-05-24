@@ -69,7 +69,7 @@
         return;
     }
 
-    
+
     hud.labelText = @"正在发送验证码，请稍后...";
     [hud show:YES];
 
@@ -78,7 +78,7 @@
     [WENetUtil sendSecurityCodeWithPhoneNumber:_accountTextfield.text success:^(NSURLSessionDataTask *task, id responseObject) {
         hud.labelText = @"验证码已发送，请查收";
         [hud hide:YES afterDelay:1.5];
-        
+        self.passwordTextfield.text = [responseObject objectForKey:@"SecurityCode"];
         __block int timeout=59; //倒计时时间
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_source_t _timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0,queue);
